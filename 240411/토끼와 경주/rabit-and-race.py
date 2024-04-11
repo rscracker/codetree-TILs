@@ -1,6 +1,4 @@
 import sys
-sys.stdin = open('input.txt', 'r')
-
 
 from collections import defaultdict
 Q = int(input().rstrip())
