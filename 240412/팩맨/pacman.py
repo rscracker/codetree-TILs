@@ -31,7 +31,7 @@ def copy_monster():
 def check_dead(x,y,round):
     if not dead[x][y]: return False
     for i in dead[x][y]:
-        if i > round:
+        if i >= round:
             return True
     return False
     
