@@ -106,7 +106,7 @@ def answer():
             cnt = points[i]
     print(cnt)
 def change_distance(pid, L):
-    for i in range(m):
+    for i in range(p):
         if pids[i] == pid:
             distances[i] *= L
             break
