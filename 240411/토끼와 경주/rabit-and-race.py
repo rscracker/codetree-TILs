@@ -1,3 +1,7 @@
+import sys
+sys.stdin = open('input.txt', 'r')
+
+
 from collections import defaultdict
 Q = int(input().rstrip())
 n,m,p = 0,0,0
@@ -52,14 +56,28 @@ def pick():
         points[i] += (new_pos[0] + 2)
 
 def move(x,y,length,dir):
-    for i in range(length):
-        nx,ny = x + dx[dir], y + dy[dir]
-        if 0 > nx or nx >= n or 0 > ny or ny >= m:
+    if dir <= 1:
+        length %= (2 * n - 2)
+    else:
+        length %= (2 * m - 2)
+
+    while length > 0:
+        distance = 0
+        if dir == 0:
+            distance = x
+        elif dir == 1:
+            distance = n - x - 1
+        elif dir == 2:
+            distance = y
+        elif dir == 3:
+            distance = m - y - 1
+        x += dx[dir] * min(length, distance)
+        y += dy[dir] * min(length, distance)
+        length -= min(length, distance)
+        if length > 0:
             dir = change_dir(dir)
-            x += dx[dir]
-            y += dy[dir]
         else:
-            x,y = nx,ny
+            break
     return x,y
 def change_dir(dir):
     if dir == 0:
@@ -92,17 +110,19 @@ def change_distance(pid, L):
         if pids[i] == pid:
             distances[i] *= L
             break
+def simulation():
+    for _ in range(Q):
+        temp = list(map(int, input().split()))
+        inst = temp[0]
+        if inst == 100:
+            ready(temp[1:])
+        if inst == 200:
+            k,s = temp[1], temp[2]
+            race(k,s)
+        if inst == 300:
+            pid_t,L = temp[1], temp[2]
+            change_distance(pid_t,L)
+        if inst == 400:
+            answer()
 
-for _ in range(Q):
-    temp = list(map(int, input().split()))
-    inst = temp[0]
-    if inst == 100:
-        ready(temp[1:])
-    if inst == 200:
-        k,s = temp[1], temp[2]
-        race(k,s)
-    if inst == 300:
-        pid_t,L = temp[1], temp[2]
-        change_distance(pid_t,L)
-    if inst == 400:
-        answer()
+simulation()
