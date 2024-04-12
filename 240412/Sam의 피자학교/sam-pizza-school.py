@@ -17,7 +17,7 @@ def roll():
     temp = [[nums[0]], nums[1:]]
     width = len(temp[0])
     height = len(temp)
-    while width + height < len(temp[-1]):
+    while width + height <= len(temp[-1]):
         temp = cut(width, height,temp)
         width = len(temp[0])
         height = len(temp)
