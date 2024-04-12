@@ -30,7 +30,7 @@ def knight_move(init_idx, idx, dir):
             if positions[nx][ny] and positions[nx][ny] != idx:
                 if not knight_move(init_idx, positions[nx][ny], dir):
                     return False
-    moves.append((idx,nx,ny,h,w,k))
+    moves.append((idx,r + dx[dir],c + dy[dir],h,w,k))
     return True
 
 def damage(idx):
@@ -49,27 +49,31 @@ def damage(idx):
         knights[idx][4] = k
 
 def new_board():
-    for key in knights.keys():
-        r,c,h,w,k = knights[key]
+    for i in range(1, N+1):
+        if not knights[i]: continue
+        r,c,h,w,k = knights[i]
         for x in range(r,r+h):
             for y in range(c,c+w):
-                positions[x][y] = key
+                positions[x][y] = i
 
-def check():
+def check(init_idx):
     while moves:
         idx,r,c,h,w,k = moves.popleft()
         knights[idx] = [r,c,h,w,k]
+        if idx != init_idx:
+            damage(idx)
 
 def answer():
     cnt = 0
-    for key in knights.keys():
-        cnt += damages[key]
+    for i in range(1, N + 1):
+        if knights[i]:
+            cnt += damages[i]
     print(cnt)
 
 for _ in range(Q):
     a,b = map(int, input().split())
     if knight_move(a, a, b):
-        check()
+        check(a)
         new_board()
     moves = deque()
 
