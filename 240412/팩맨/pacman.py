@@ -11,7 +11,7 @@ p_y -= 1
 
 monsters = [[[0] * 8 for _ in range(4)] for _ in range(4)]
 eggs = deque()
-dead = [[deque() for _ in range(n)] for _ in range(n)]
+dead = [[0] * n for _ in range(n)]
 
 dx,dy = [-1,-1,0,1,1,1,0,-1],[0,-1,-1,-1,0,1,1,1]
 pdx,pdy = [-1,0,1,0],[0,-1,0,1]
@@ -30,9 +30,8 @@ def copy_monster():
 
 def check_dead(x,y,round):
     if not dead[x][y]: return False
-    for i in dead[x][y]:
-        if i >= round:
-            return True
+    if dead[x][y] >= round:
+        return True
     return False
     
 def move_monsters(round):
@@ -63,6 +62,7 @@ def move_pack(round):
     global p_x, p_y
     eat = 0
     move = []
+    move_temp = []
     for start in range(4):
         nx1,ny1 = p_x + pdx[start], p_y + pdy[start]
         if 0 > nx1 or nx1 >= n or 0 > ny1 or ny1 >= n: continue
@@ -80,10 +80,16 @@ def move_pack(round):
                 if cnt > eat:
                     move = [(nx1,ny1), (nx2,ny2), (nx3, ny3)]
                     eat = cnt
-    p_x,p_y = move[2]
+                if not move and not move_temp:
+                    move_temp = [(nx1,ny1), (nx2,ny2), (nx3, ny3)]
+    
+    if move:
+        p_x,p_y = move[2]
+    else:
+        p_x,p_y = move_temp[2]
     for x,y in move:
         if any(monsters[x][y][i] for i in range(8)):
-            dead[x][y].append((round + 2))
+            dead[x][y] = round + 2
             monsters[x][y] = [0] * 8
         
 
