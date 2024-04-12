@@ -10,11 +10,14 @@ waiting_urls = defaultdict(list)
 logs = defaultdict(tuple)
 checking = defaultdict(int)
 checker = defaultdict(str)
+answer = 1
 
 def request(t,p,u):
+    global answer
     domain,id = u.split('/')
     if id in waiting_urls[domain]: return
     heapq.heappush(waiting_queue[domain], (p,t,u))
+    answer += 1
     waiting_urls[domain].append(id)
     return
 
@@ -42,6 +45,7 @@ def checkTime(domain, t):
     return True
     
 def start_check(t, task):
+    global answer
     priority, time, url = task
     domain, id = url.split('/')
     for i in range(1, N + 1):
@@ -50,6 +54,7 @@ def start_check(t, task):
             checking[domain] = t
             heapq.heappop(waiting_queue[domain])
             waiting_urls[domain].remove(id)
+            answer -= 1
             return
 
 def finish(t, J_id):
@@ -60,12 +65,6 @@ def finish(t, J_id):
     checker[J_id] = ''
     checking.pop(domain)
     return
-
-def answer():
-    cnt = 0
-    for domain in list(waiting_queue.keys()):
-        cnt += len(waiting_queue[domain])
-    print(cnt)
 
 for _ in range(Q):
     temp = list(input().split())
@@ -91,4 +90,4 @@ for _ in range(Q):
         finish(t, J_id)
     
     elif inst == 500:
-        answer()
+        print(answer)
