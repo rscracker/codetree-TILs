@@ -54,9 +54,9 @@ def move_monsters(round):
                     if check == 8:
                         break
                 if check == 8:
-                    new_monsters[x][y][d] = monsters[x][y][d]
+                    new_monsters[x][y][d] += monsters[x][y][d]
                 else:
-                    new_monsters[nx][ny][dir] = monsters[x][y][d]
+                    new_monsters[nx][ny][dir] += monsters[x][y][d]
     monsters = new_monsters
 
 def move_pack(round):
