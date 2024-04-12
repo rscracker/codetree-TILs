@@ -30,7 +30,6 @@ def change_pos():
             nx, ny = find_pos(x, y, distance, i)
             if (nx+ny, nx, ny, pid) > pos:
                 pos = (nx+ny, nx, ny, pid)
-
     infos[pid] = [pos[1],pos[2],jump+1]
     heapq.heappush(rabbits, (jump+1, pos[0], pos[1], pos[2], pid))
     heapq.heappush(positions, (-pos[0],-pos[1],-pos[2],-pid, jump+1))
@@ -70,11 +69,12 @@ def change_dir(dir):
         return 2
 
 def find_highest(s):
+    global positions
     sum_pos, x ,y, pid, jump = heapq.heappop(positions)
     while infos[-pid] != [-x,-y,jump]:
         sum_pos, x, y, pid, jump = heapq.heappop(positions)
     points[-pid] += s
-    heapq.heappush(positions, (sum_pos, x ,y, pid, jump))
+    positions = []
 
 def highest_score():
     cnt = -1
