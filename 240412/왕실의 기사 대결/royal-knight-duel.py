@@ -10,7 +10,7 @@ knights = defaultdict(list)
 dx,dy = [-1,0,1,0],[0,1,0,-1]
 answer = 0
 damages = [0] * (N + 1)
-moves = deque()
+moves = set()
 
 for i in range(N):
     r,c,h,w,k = map(int, input().split())
@@ -30,7 +30,7 @@ def knight_move(idx, dir):
             if positions[nx][ny] and positions[nx][ny] != idx:
                 if not knight_move(positions[nx][ny], dir):
                     return False
-    moves.append((idx,r + dx[dir],c + dy[dir],h,w,k))
+    moves.add((idx,r + dx[dir],c + dy[dir],h,w,k))
     return True
 
 def damage(idx):
@@ -60,8 +60,8 @@ def new_board():
     positions = new
 
 def check(init_idx):
-    while moves:
-        idx,r,c,h,w,k = moves.popleft()
+    for move in moves:
+        idx,r,c,h,w,k = move
         knights[idx] = [r,c,h,w,k]
         if idx != init_idx:
             damage(idx)
@@ -78,6 +78,6 @@ for _ in range(Q):
     if knight_move(a, b):
         check(a)
         new_board()
-    moves = deque()
+    moves = set()
 
 answer()
