@@ -1,4 +1,4 @@
-from collections import defaultdict
+from collections import defaultdict, deque
 import heapq
 
 L,N,Q = map(int, input().split())
@@ -10,6 +10,7 @@ knights = defaultdict(list)
 dx,dy = [-1,0,1,0],[0,1,0,-1]
 answer = 0
 damages = [0] * (N + 1)
+moves = deque()
 
 for i in range(N):
     r,c,h,w,k = map(int, input().split())
@@ -18,6 +19,7 @@ for i in range(N):
             positions[x-1][y-1] = i + 1
     knights[i+1] = [r-1,c-1,h,w,k]
 def knight_move(init_idx, idx, dir):
+    global moves
     if not knights[idx]: return False
     r,c,h,w,k = knights[idx]
     for x in range(r, r + h):
@@ -28,10 +30,7 @@ def knight_move(init_idx, idx, dir):
             if positions[nx][ny] and positions[nx][ny] != idx:
                 if not knight_move(init_idx, positions[nx][ny], dir):
                     return False
-    nr, nc = r + dx[dir], c + dy[dir]
-    knights[idx] = [nr, nc, h, w, k]
-    if idx != init_idx:
-        damage(idx)
+    moves.append((idx,nx,ny,h,w,k))
     return True
 
 def damage(idx):
@@ -56,6 +55,11 @@ def new_board():
             for y in range(c,c+w):
                 positions[x][y] = key
 
+def check():
+    while moves:
+        idx,r,c,h,w,k = moves.popleft()
+        knights[idx] = [r,c,h,w,k]
+
 def answer():
     cnt = 0
     for key in knights.keys():
@@ -64,7 +68,9 @@ def answer():
 
 for _ in range(Q):
     a,b = map(int, input().split())
-    knight_move(a, a, b)
-    new_board()
+    if knight_move(a, a, b):
+        check()
+        new_board()
+    moves = deque()
 
 answer()
