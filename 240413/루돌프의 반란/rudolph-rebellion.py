@@ -105,7 +105,6 @@ def collisionSanta(nx,ny,k,santa_idx):
 
 def inter(x,y,nx,ny,santa_idx):
     if 0 > x or x >= N or 0 > y or y >= N:
-        board[x][y] = 0
         positions[santa_idx] = [-1,-1]
         return
 
